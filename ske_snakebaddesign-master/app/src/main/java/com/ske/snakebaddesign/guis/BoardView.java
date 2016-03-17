@@ -98,7 +98,11 @@ public class BoardView extends View {
                 float startY = j * cellSize + padding/2;
                 float endX = startX + cellSize - padding;
                 float endY = startY + cellSize - padding;
-                paint.setColor(colorCell);
+                if(i==3&&j==0 || i==4&&j==1 || i==2&&j==2 || i==3&&j==3 || i==1&&j==4 || i==2&&j==5)
+                    paint.setColor(Color.parseColor("#c6d2a1"));
+                else
+                    paint.setColor(colorCell);
+
                 canvas.drawRect(startX, startY, endX, endY, paint);
                 paint.setColor(colorText);
                 String label = (j *  boardSize + i + 1) + "";

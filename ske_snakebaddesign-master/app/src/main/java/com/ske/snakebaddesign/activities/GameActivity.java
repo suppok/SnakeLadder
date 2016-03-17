@@ -92,20 +92,6 @@ public class GameActivity extends AppCompatActivity implements Observer {
         displayDialog(title, msg, listener);
     }
 
-//    private void moveCurrentPiece(int value) {
-//        if (turn % 2 == 0) {
-//            p1Position = adjustPosition(p1Position, value);
-//            boardView.setP1Position(p1Position);
-//            textPlayerTurn.setText("Player 2's Turn");
-//        } else {
-//            p2Position = adjustPosition(p2Position, value);
-//            boardView.setP2Position(p2Position);
-//            textPlayerTurn.setText("Player 1's Turn");
-//        }
-//        checkWin();
-//        turn++;
-//    }
-
     private int adjustPosition(int current, int distance) {
         current = current + distance;
         int maxSquare = boardSize * boardSize - 1;
@@ -130,6 +116,55 @@ public class GameActivity extends AppCompatActivity implements Observer {
         displayDialog(title, msg, listener);
     }
 
+    private void checkSpecial() {
+
+
+        String lucky = "LUCKY";
+        String detail = "You get free roll";
+
+        if(game.getP1Pos() == 3 || game.getP1Pos() == 10 || game.getP1Pos() == 14 ||
+                game.getP1Pos() == 21 || game.getP1Pos() == 25 || game.getP1Pos() == 32) {
+            OnClickListener popup = new OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    final int value = game.getDieCup().roll();
+                    String title = "You rolled a die";
+                    String msg = "You got " + value;
+                    OnClickListener listener = new OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            game.playSpecial1(value);
+                            dialog.dismiss();
+                        }
+                    };
+                    displayDialog(title, msg, listener);
+                    dialog.dismiss();
+                }
+            };
+            displayDialog(lucky, detail, popup);
+
+
+        } else if(game.getP2Pos() == 3 || game.getP2Pos() == 10 || game.getP2Pos() == 14 ||
+                game.getP2Pos() == 21 || game.getP2Pos() == 25 || game.getP2Pos() == 32){
+
+            OnClickListener popup = new OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    final int value = game.getDieCup().roll();
+                    String title = "You rolled a die";
+                    String msg = "You got " + value;
+                    OnClickListener listener = new OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            game.playSpecial2(value);
+                            dialog.dismiss();
+                        }
+                    };
+                    displayDialog(title, msg, listener);
+                    dialog.dismiss();
+                }
+            };
+            displayDialog(lucky, detail, popup);
+        }
+
+    }
+
     private void displayDialog(String title, String message, DialogInterface.OnClickListener listener) {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(title);
@@ -141,14 +176,15 @@ public class GameActivity extends AppCompatActivity implements Observer {
 
     public void update(Observable o, Object obj) {
         Player player = (Player)obj;
-        if(player.getNumber() == 1) {
+        if(player.getNumber() == 1)
             boardView.setP1Position(player.getPosition());
-            textPlayerTurn.setText("Player 2's Turn");
-        }
-        else {
+        else
             boardView.setP2Position(player.getPosition());
+        checkSpecial();
+        if(player.getNumber() == 1)
+            textPlayerTurn.setText("Player 2's Turn");
+        else
             textPlayerTurn.setText("Player 1's Turn");
-        }
         checkWin();
         boardView.postInvalidate();
 

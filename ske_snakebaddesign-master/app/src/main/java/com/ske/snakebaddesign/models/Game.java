@@ -56,5 +56,25 @@ public class Game extends Observable {
     public DieCup getDieCup() {
         return this.dieCup;
     }
+    public int getP1Pos() {
+        return this.player1.getPosition();
+    }
+    public int getP2Pos() {
+        return this.player2.getPosition();
+    }
+
+    public void playSpecial1(int value) {
+        player1.setPosition(adjustPosition(player1.getPosition(), value));
+        setChanged();
+        notifyObservers(player1);
+    }
+
+
+    public void playSpecial2(int value) {
+        player2.setPosition(adjustPosition(player2.getPosition(), value));
+        setChanged();
+        notifyObservers(player2);
+    }
+
 
 }
